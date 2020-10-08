@@ -1,0 +1,291 @@
+---
+title: "2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding"
+author: "Fanxi Zhou, Feixue Han, Zhiang Chen"
+date: '2020-10-07'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(visdat)
+library(kableExtra)
+```
+
+```{r dataset}
+set.seed(1008611)
+monthly_polling <- tibble(citizenship=sample(x=c("Yes","No","Prefer not to tell"),
+                                size= 5000,replace=TRUE,
+                                prob=c(0.853,0.142,0.005)),
+                  
+                  age=sample(x=c("under 18","18-29","30-39","40-49","50-59",
+                                 "60-69","70-79","80-89","90-99",
+                                 "100 and over","Prefer not to tell"),
+                             size= 5000,replace=TRUE,
+                             prob=c(0.19,0.17,0.144,0.135,0.135,
+                                    0.105,0.06,0.035,0.018,0.002,0.006)),
+                  gender=sample(x=c("Male","Female","Other gender",
+                                    "Prefer not to tell"),
+                                size=5000,replace=TRUE,
+                                prob=c(0.582,0.506,0.002,0.01)),
+                  education=sample(x=c("No certificate, diploma or degree",
+                                       "High School diploma","College",
+                                       "Bachelor's degree","Graduate School",
+                                       "Prefer not to tell"),
+                                   size=5000,replace=TRUE,
+                                   prob=c(0.176,0.295,0.154,0.237,0.125,0.013)),
+                  income=sample(x=c("Under 50000","50000-100000","100000-200000",
+                                    "200000-300000","300000-400000",
+                                    "400000-500000","500000-1000000",
+                                    "Over 1000000","Prefer not to tell"),
+                                size=5000,replace=TRUE,
+                                prob=c(0.27,0.083,0.176,0.111,0.084,
+                                       0.068,0.148,0.05,0.01)),
+                  willingness_to_vote=sample(x=c("Yes","No","Not sure"),
+                                             size=5000,replace=TRUE,
+                                             prob=c(0.683,0.097,0.22)),
+                  party_support=sample(x=c("Liberal Party of Canada",
+                                           "Conservative party of Canada",
+                                           "New Democratic Party",
+                                           "Green Party of Canada",
+                                           "Canadian Nationalist Party",
+                                           "Other"),size=5000,replace=TRUE,
+                                       prob=c(0.484,0.314,0.122,0.049,
+                                              0.02,0.011)),
+                  satisfaction_with_Liberal=sample(x=c("Very satisfied",
+                                                       "Satisfied",
+                                          "Neither satisfied nor dissatisfied",
+                                      "Dissatisfied","Very dissatisfied",
+                                      "Prefer not to tell"),
+                                      size=5000,replace=TRUE,
+                                      prob=c(0.097,0.231,0.354,
+                                             0.213,0.093,0.012)),
+                  impact_on_vote_behavior=sample(x=c("Social media","Loyalty",
+                                                     "Debate",
+                                                     "Neighborhood campign",
+                                                     "Peer pressure","Others",
+                                                     "Prefer not to tell"),
+                                                 size=5000,replace=TRUE,
+                                                 prob=c(0.123,0.345,0.126,
+                                                        0.108,0.248,
+                                                        0.004,0.001)),
+                  which_party_may_win=sample(x=c("Liberal Party of Canada",
+                                           "Conservative party of Canada",
+                                           "New Democratic Party",
+                                           "Green Party of Canada",
+                                           "Canadian Nationalist Party",
+                                           "Other"),size=5000,replace=TRUE,
+                                           prob=c(0.502,0.324,0.098,
+                                                  0.04,0.022,0.014)),
+                   know_about_Liberal=sample(x=c("I know nothing about Liberal party of canada","I have heard something about this party before","I know some basic  knowledge about this party","I am familiar with policy and key idea of the party","I know the party policy very well and I am able to have deep understanding of this.","Prefer not to tell"),size=5000,replace=TRUE,
+                                             prob=c(0.106,0.102,0.298,
+                                                    0.266,0.143,0.085)),
+                  
+                  satisfaction_refugee_policy=sample(x=c("Very satisfied",
+                                                       "Satisfied",
+                                          "Neither satisfied nor dissatisfied",
+                                      "Dissatisfied","Very dissatisfied",
+                                      "Prefer not to tell"),
+                                      size=5000,replace=TRUE,
+                                      prob=c(0.023,0.048,0.242,
+                                             0.453,0.224,0.002)),
+                  
+                  satisfaction_cov19_policy=sample(x=c("Very satisfied",
+                                                       "Satisfied",
+                                          "Neither satisfied nor dissatisfied",
+                                      "Dissatisfied","Very dissatisfied",
+                                      "Prefer not to tell"),
+                                      size=5000,replace=TRUE,
+                                      prob=c(0.143,0.297,0.343,
+                                             0.114,0.085,0.018)),
+                  satisfaction_education_policy=sample(x=c("Very satisfied",
+                                                       "Satisfied",
+                                          "Neither satisfied nor dissatisfied",
+                                      "Dissatisfied","Very dissatisfied",
+                                      "Prefer not to tell"),
+                                      size=5000,replace=TRUE,
+                                      prob=c(0.184,0.242,0.26,
+                                             0.155,0.127,0.032)),
+                  satisfaction_environment_policy=sample(x=c("Very satisfied",
+                                                       "Satisfied",
+                                          "Neither satisfied nor dissatisfied",
+                                      "Dissatisfied","Very dissatisfied",
+                                      "Prefer not to tell"),
+                                      size=5000,replace=TRUE,
+                                      prob=c(0.193,0.244,0.296,
+                                             0.174,0.078,0.015)),
+                  satisfaction_gender_equal_policy=sample(x=c("Very satisfied",
+                                                       "Satisfied",
+                                          "Neither satisfied nor dissatisfied",
+                                      "Dissatisfied","Very dissatisfied",
+                                      "Prefer not to tell"),
+                                      size=5000,replace=TRUE,
+                                      prob=c(0.164,0.293,0.376,
+                                             0.094,0.057,0.016)))
+
+
+```
+
+# Executive summary
+
+To provide the Liberal party the monthly polling data and the further instruction of the election in the Don Valley North riding, we conduct a survey in the Don Valley North riding to understand their people's political opinions towards the Liberal.
+
+# Introduction
+
+In this survey, we want to provide the Liberal party with the monthly polling updates in the Don Valley North riding, and we survey in to analyze people's opinions towards Liberal in the riding. We have found that people are more satisfied with the Liberal's gender-equal policy, environmental protection policy, and Cov-19 response and not very satisfied with the refugee policy. Also, we find that loyalty and peer pressure are the most important 2 reasons that might influence people's choice in the election and debate, neighborhood campaign and social media are the other main reasons which may influence the results.
+
+In our study, we analyzed the data from the 5,000 questionnaires that we collected in the riding. We try to analyze the distribution of age, gender, educational background, etc. to have a clear portrait of all the voters in the riding. Also, we tried to quantify people's satisfaction with each Liberal's policy and we got an overall score of 2.9954 out of 5.00. We found that people are more favorable with the gender equality policy, environmental protection policy, and Cov-19 response which can be broadly advertised. Furthermore, we should focus on the existing Liberal supporters and the campaign should focus on debate, neighborhood campaigns and social media.
+
+We analyzed the data from 5,000 questionnaires to get the conclusion, however, some of the questions in questionnaires have configured answers which may limit the amount of the possible option. For further study, we can spend more time on asking individuals for their personal opinion. Also, with the limited budget, we only have 5,000 samples, we can have more accurate results with a larger sample size.
+
+# Survey methodology 
+
+The population of the Don Valley North is 110,076. To accurately estimate the result, we collected 5,000 questionnaires. In the following suevey we used 5,000 questionnaires as our sample to estimate the population in the Don Velley North riding.
+
+In the survey we used Simple random sampling with replacement(SRSWR) to gather 5,000 data from the population to forcast the whole riding's data by randomly choose the visiting address. Each sample was chosen randomly by chance from the population, thus each of them have the same probability been choosen. We chose to do the sampling with replacement. If we chose to do the sampling without replacement the probability of selection of each data will change after each draw. Thus we choose Simple random sampling with replacement to gather 5,000 data to estimate the population.
+
+We will randomly choose 6,000 voters' address in the riding and visit their living places in person to do the questionnaires. And consider that some of them may refused the interview thus we may only use the first 5,000 effective response as our data set.
+
+Our platform estimated that the cost will be $\$14,896$ in total, but we can cut down the budget by hiring voulenteers to do the survey. We estimated that in average each effective response will take 15 minutes to finish include the traffic time and enquiry time with an efficient arrangement. Thus it will need 1,250 hours working time to finish the survey, by hiring 3-5 full time staffs and 30-50 volunteers we can finish the survey in less than a week with a cost of around $\$5,000$.
+
+Since our suvey was done by in person questionnaire, we can filter out the invalid response in the first hand. And for the question that the respondent choose prefer not to tell, we will guarantee that for each of the question that the maximum "prefer not to tell" rate is less than 5% to avoid influencing the final conclusion. We will accumulate the number of each question that receive "prefer not to tell", if the accumulated number is over 250(5000*5%), we may need to conduct a futher survey to collect more data to maintain this rate for accuracy. Fortunately, with proper inquiry strategy all of our questions have a much lower "prefer not to tell" rate than 5%.
+
+All the data we collected and all the original questionnaire in this survey will be destroied. For each individual we will not collect their specific personal information that can be link to him or her like name, address or phone number thus the violation of privacy is not possible in the survey.
+
+# Discussion 
+
+The data we use was collected by the 5,000 effective questionnaires in the Don Valley North riding. And we will analyze the data we collected in the survey for further study.
+
+There are three parts of the data, Personal Information, Political Opinion, and Attitude towards Liberal. For each of the questions, there are some responders who prefer not to answer. However, we can see that the non response rate is relatively low which may not significantly influence our final results.
+
+```{r}
+monthly_polling[monthly_polling=="Prefer not to tell"] <- NA
+visdat::vis_dat(monthly_polling)
+```
+
+In the personal information part, we collected voters' citizenship, age, gender, education, and income. And the following graph shows the distribution of voters' age, education background, and Income. We can see that people with the voting right are evenly distributed between 18-69, as age increases the population decreases. 30% of the voters have a high school diploma, around 40% of the voters have college or university degree. Generally speaking, the riding's population have been well educated. On the other hand, around 30% of people's income is less than 50,000.
+
+```{r}
+plt1 <- ggplot(monthly_polling)+ geom_bar(aes(age, fill = ..count..),  width = 0.5) + labs(title="Age of the voters", 
+           subtitle="age distribution", 
+           caption="Source: monthly_polling dataset") + theme(axis.text.x = element_text(angle=30, vjust=0.8,hjust = 0.8))+scale_fill_gradient(low="blue", high="red")
+plt1
+
+plt2 <- ggplot(monthly_polling)+ geom_bar(aes(education, fill = ..count..),  width = 0.5) + labs(title="Education background of the voters", 
+           subtitle="education background distribution", 
+           caption="Source: monthly_polling dataset") + theme(axis.text.x = element_text(angle=30, vjust=0.8,hjust = 0.8))+scale_fill_gradient(low="blue", high="red")
+plt2
+
+plt3 <- ggplot(monthly_polling)+ geom_bar(aes(income, fill = ..count..),  width = 0.5) + labs(title="Income of the voters", 
+           subtitle="Income distribution", 
+           caption="Source: monthly_polling dataset") + theme(axis.text.x = element_text(angle=30, vjust=0.8,hjust = 0.8))+scale_fill_gradient(low="blue", high="red")
+plt3
+
+```
+
+In the political opinion part, we asked voters' favorable party, thus we estimated that more than two-thirds of the electorates will vote in the election. Also, we can see that the most favorable party in the Don Valley North riding is the Liberal party with more than 15% advantage over the second favorable party the Conservative party. Most of the people are neither satisfied nor dissatisfied with the Liberal administration. The most two important reasons for voters' choices are loyalty and peer pressure.
+
+```{r}
+plt4 <- ggplot(monthly_polling)+ geom_bar(aes(party_support, fill = ..count..),  width = 0.5) + labs(title="Do you have any favoriable party?", 
+           subtitle="most favoriable party", 
+           caption="Source: monthly_polling dataset") + theme(axis.text.x = element_text(angle=30, vjust=0.8,hjust = 0.8))+scale_fill_gradient(low="blue", high="red")
+plt4
+
+plt5 <- ggplot(monthly_polling)+ geom_bar(aes(satisfaction_with_Liberal, fill = ..count..),  width = 0.5) + labs(title="Do you satified with the Libreal government right now?", 
+           subtitle="satisfaction", 
+           caption="Source: monthly_polling dataset") + theme(axis.text.x = element_text(angle=30, vjust=0.8,hjust = 0.8))+scale_fill_gradient(low="blue", high="red")
+plt5
+```
+
+In part 3 we asked questions about responders' attitudes towards Liberal's specific policy in refugee, COV-19 response, education, environment protection and gender-equal rights. For each question we gave them 5 choices: "Very satisfied", "Satisfied", "Neither satisfied nor dissatisfied", "Dissatisfied", "Very dissatisfied", to quantify the voters' attitude. We transformed the data into numeric data 5, 4, 3, 2, 1 for the further results. 
+
+```{r}
+monthly_polling_num <- select(monthly_polling,satisfaction_with_Liberal,
+                      satisfaction_refugee_policy,
+                      satisfaction_cov19_policy,
+                   satisfaction_education_policy,
+                   satisfaction_environment_policy,
+                   satisfaction_gender_equal_policy)
+monthly_polling_num[monthly_polling_num=="Very satisfied"] <- "5"
+monthly_polling_num[monthly_polling_num=="Satisfied"] <- "4"
+monthly_polling_num[monthly_polling_num=="Neither satisfied nor dissatisfied"] <- "3"
+monthly_polling_num[monthly_polling_num=="Dissatisfied"] <- "2"
+monthly_polling_num[monthly_polling_num=="Very dissatisfied"] <- "1"
+monthly_polling_num[is.na(monthly_polling_num)] = "0"
+monthly_polling_num$satisfaction_with_Liberal<-as.numeric(monthly_polling_num$satisfaction_with_Liberal)
+monthly_polling_num$satisfaction_refugee_policy<-as.numeric(monthly_polling_num$satisfaction_refugee_policy)
+monthly_polling_num$satisfaction_cov19_policy<-as.numeric(monthly_polling_num$satisfaction_cov19_policy)
+monthly_polling_num$satisfaction_environment_policy<-
+            as.numeric(monthly_polling_num$satisfaction_environment_policy)
+monthly_polling_num$satisfaction_education_policy<-as.numeric(monthly_polling_num$satisfaction_education_policy)
+monthly_polling_num$satisfaction_gender_equal_policy<-as.numeric(monthly_polling_num$satisfaction_gender_equal_policy)
+```
+
+# Results
+
+We found that the overall satisfaction score of the Liberal party is 2.9954/5.00. In specific, people are more positive about the liberal's gender-equal policy, environmental protection policy, and Cov-19 response which we can focus on to advertise in the campaign. Also, we should avoid the attack from the opposition party on the Liberal's refugee policy.
+
+```{r}
+value_of_policy <- data.frame(Policy = c("Overall", "Refugee", "Cov-19", "Education", "Environment", "gender_equal"),
+                            Value = c(mean(monthly_polling_num$satisfaction_with_Liberal), mean(monthly_polling_num$satisfaction_refugee_policy),mean(monthly_polling_num$satisfaction_cov19_policy), mean(monthly_polling_num$satisfaction_education_policy), mean(monthly_polling_num$satisfaction_environment_policy), mean(monthly_polling_num$satisfaction_gender_equal_policy)))
+
+value_of_policy %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("condensed", "striped", "bordered"))
+```
+
+The survey shows that loyalty is the most important reason for people's choice, the Liberal's existing voters are the fundamental ballot in this election. Also, we can see that around a quarter of people voted because of the peer pressure, the Herd Effect will also influence the election. Furthermore, debate, neighborhood campaign and social media are the three main reasons tha influenced people's choices.
+
+```{r}
+plt6 <- ggplot(monthly_polling)+ geom_bar(aes(impact_on_vote_behavior, fill = ..count..),  width = 0.5) + labs(title="What may influence your political opinion?", 
+           subtitle="publicity", 
+           caption="Source: monthly_polling dataset") + theme(axis.text.x = element_text(angle=30, vjust=0.8,hjust = 0.8))+scale_fill_gradient(low="blue", high="red")
+plt6
+```
+
+# Weakness and areas for future
+
+- In the research we give people choices of the reason what may influence their political opinion, which may limit people's thought to the 5 options, there may be other factors that may influence people's political opinion.
+
+- In the further study we can spend more time on the conversation with the respondent to discuss the reason why they change their opinion instead of directly giving them the options.
+
+- Also, in this research, we only use 5,000 data to estimate the whole population in the riding, for more accurate results we can increase the sample size.
+
+# Appendix
+## Survey
+https://docs.google.com/forms/d/1BXWa3FAutmeRcBYKXHcR7wNfRwy4xNow3x0TKevVVec/prefill
+
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -1](/Users/chenzhiang/Desktop/STA304A2-1.png)
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -2](/Users/chenzhiang/Desktop/STA304A2-2.png)
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -3](/Users/chenzhiang/Desktop/STA304A2-3.png)
+
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -4](/Users/chenzhiang/Desktop/STA304A2-4.png)
+
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -5](/Users/chenzhiang/Desktop/STA304A2-5.png)
+
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -6](/Users/chenzhiang/Desktop/STA304A2-6.png)
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -7](/Users/chenzhiang/Desktop/STA304A2-7.png)
+![2020 Canadian Election Survey of the Liberal Party, Don Valley North Riding -8](/Users/chenzhiang/Desktop/STA304A2-8.png)
+
+
+
+# References
+
+- Wickham et al., (2019). Welcome to the tidyverse. Journal of Open
+  Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+- R Core Team (2020). R: A language and environment for statistical
+  computing. R Foundation for Statistical Computing, Vienna, Austria.
+  URL https://www.R-project.org/.
+  
+-  Tierney, Nicholas. 2017. “Visdat: Visualising Whole Data Frames.” JOSS 2 (16): 355. https://doi.org/10. 21105/joss.00355.
+
+- Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. “Welcome to the tidyverse.” Journal of Open Source Software 4 (43): 1686. https://doi.org/10.21105/joss.01686.
+  
+- Canada's Federal Electoral Districts. (2020, May 12). Retrieved from https://www.elections.ca/content.aspx?section=res&dir=cir/list&document=index338&lang=e#list
+  
+- Statistics Canada. 2017. Toronto, C [Census subdivision], Ontario and Canada [Country] (table). Census Profile. 2016 Census. Statistics Canada Catalogue no. 98-316-X2016001. Ottawa. Released November 29, 2017.
+https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/prof/index.cfm?Lang=E (accessed October 6, 2020)
+
+- “Toronto Division Education Level Statistics.” AreaScore, areascore.ca/area/toronto-division_on/education-levels-completed-statistics.
+
+  
