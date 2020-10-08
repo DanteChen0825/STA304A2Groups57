@@ -5,6 +5,8 @@ date: '2020-10-07'
 output: pdf_document
 ---
 
+Code and data supporting this analysis is available at: "https://github.com/DanteChen0825/STA304A2Groups57".
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
